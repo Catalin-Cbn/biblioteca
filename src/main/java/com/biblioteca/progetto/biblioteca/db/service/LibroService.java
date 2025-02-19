@@ -2,12 +2,13 @@ package com.biblioteca.progetto.biblioteca.db.service;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.progetto.biblioteca.db.entity.Libro;
+import com.biblioteca.progetto.biblioteca.db.entity.Prestito;
 import com.biblioteca.progetto.biblioteca.db.repo.LibroRepo;
+import com.biblioteca.progetto.biblioteca.db.repo.PrestitoRepo;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotEditableException;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotFoundException;
 
@@ -17,7 +18,10 @@ import jakarta.transaction.Transactional;
 public class LibroService {
 
     @Autowired
-    LibroRepo libroRepo;
+    private LibroRepo libroRepo;
+
+    @Autowired
+    private PrestitoRepo prestitoRepo;
 
     public List<Libro> findAll() {
         return libroRepo.findAll();
@@ -25,6 +29,10 @@ public class LibroService {
 
     public Libro findById(Long id) {
         return libroRepo.findById(id).orElse(null);
+    }
+
+    public List<Libro> findByAutoreAndTitolo(String autore, String Libro) {
+        return libroRepo.findByTitoloAndAutore(autore, Libro);
     }
 
     public void save(Libro libro) {
@@ -38,10 +46,9 @@ public class LibroService {
         if (libro == null) {
             throw new BookNotFoundException("Il libro con id " + id + " non è presente nel database.");
         }
-
-        Hibernate.initialize(libro.getPrestiti());
-        if (copie < libro.getPrestiti().size()) {
-            throw new BookNotEditableException("Ci sono " + libro.getPrestiti().size()
+        List<Prestito> prestiti = prestitoRepo.findByLibroAndRestituito(libro, false);
+        if (copie < prestiti.size()) {
+            throw new BookNotEditableException("Ci sono " + prestiti.size()
                     + "copie in prestito, quindi non puoi aggiornare con " + copie + " copie");
         }
         libro.setnCopieDisponibili(copie);
@@ -58,9 +65,12 @@ public class LibroService {
     }
 
     public void deleteById(Long id) {
+        Libro libro = libroRepo.findById(id).orElse(null);
+        if (libro == null) {
+            throw new BookNotFoundException("Il libro con id " + id + " non è presente nel database.");
+        }
         libroRepo.deleteById(id);
     }
 
-    
     
 }

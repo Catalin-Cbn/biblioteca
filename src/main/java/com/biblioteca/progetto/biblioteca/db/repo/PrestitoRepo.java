@@ -11,6 +11,6 @@ import com.biblioteca.progetto.biblioteca.db.entity.Prestito;
 @Repository
 public interface PrestitoRepo extends JpaRepository<Prestito, Long> {
     
-    List<Libro> findByRestituito(boolean restituito);
+    List<Prestito> findByLibroAndRestituito(Libro libro, boolean restituito);
 
 }
