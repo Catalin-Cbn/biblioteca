@@ -2,6 +2,7 @@ package com.biblioteca.progetto.biblioteca.db.service;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,15 @@ public class LibroService {
     @Autowired
     private PrestitoRepo prestitoRepo;
 
+    @Transactional
     public List<Libro> findAll() {
-        return libroRepo.findAll();
+        List<Libro> listaLibri = libroRepo.findAll();
+        for (Libro libro : listaLibri) {
+            Hibernate.initialize(libro.getPrestiti());
+        }
+        
+        
+        return listaLibri;
     }
 
     public Libro findById(Long id) {
@@ -71,7 +79,7 @@ public class LibroService {
             throw new BookNotFoundException("Il libro con id " + id + " non è presente nel database.");
         }
         List<Prestito> prestiti = prestitoRepo.findByLibroAndRestituito(libro, false);
-        if(prestiti == null) {       //se la lista dei prestiti è vuota, possiamo eliminare il libro dal database, altrimenti passiamo l'exception
+        if(prestiti == null || prestiti.size() == 0) {       //se la lista dei prestiti è vuota, possiamo eliminare il libro dal database, altrimenti passiamo l'exception
             libroRepo.deleteById(id);
         } else {
             throw new BookNotDeletableException("Ci sono " + prestiti.size() + " copie del libro in prestito");

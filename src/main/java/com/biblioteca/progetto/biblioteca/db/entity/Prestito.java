@@ -2,6 +2,8 @@ package com.biblioteca.progetto.biblioteca.db.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,7 @@ public class Prestito {
 
     private boolean restituito = false;
 
+    @JsonIgnore
     @ManyToOne
     private Libro libro;
 

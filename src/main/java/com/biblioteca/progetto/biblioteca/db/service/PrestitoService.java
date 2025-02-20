@@ -3,10 +3,8 @@ package com.biblioteca.progetto.biblioteca.db.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 import com.biblioteca.progetto.biblioteca.db.entity.Libro;
 import com.biblioteca.progetto.biblioteca.db.entity.Prestito;
@@ -51,7 +49,8 @@ public class PrestitoService {
         }
 
         prestito.setDataInizio(LocalDate.now());
-    
+        prestito.setLibro(libro);
+        save(prestito);
     }
 
 }
