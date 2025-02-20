@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 
+
+
 @RestController
 @RequestMapping("/prestito")
 public class PrestitoController {
@@ -21,15 +23,22 @@ public class PrestitoController {
     @Autowired
     PrestitoService prestitoService;
 
-    @PostMapping("aggiungiPrestito")
+    @PostMapping("/aggiungiPrestito")
     public void aggiungiPrestito(@RequestParam Long libroId, @RequestParam Long utenteId) {
         
         prestitoService.creaPrestito(libroId, utenteId);
     }
     
-    @GetMapping("elencoPrestiti")
+    @GetMapping("/elencoPrestiti")
     public List<Prestito> elencoPrestiti() {
         return prestitoService.findAll();
     }
+
+    @PostMapping("/restituisciPrestito")
+    public void restituisciPrestito(@RequestParam Long prestitoId) {
+    
+        prestitoService.restituisciPrestito(prestitoId);
+    }
+    
     
 }

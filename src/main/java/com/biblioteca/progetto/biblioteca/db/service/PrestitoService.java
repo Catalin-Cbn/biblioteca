@@ -14,6 +14,7 @@ import com.biblioteca.progetto.biblioteca.db.repo.PrestitoRepo;
 import com.biblioteca.progetto.biblioteca.db.repo.UtenteRepo;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotFoundException;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotLendableException;
+import com.biblioteca.progetto.biblioteca.web.exception.LendingNotFoundException;
 
 @Service
 public class PrestitoService {
@@ -60,4 +61,27 @@ public class PrestitoService {
         save(prestito);
     }
 
+    public void restituisciPrestito(Long prestitoId) {
+        Prestito prestito = prestitoRepo.findById(prestitoId).orElse(null);
+        if (prestito == null) {
+            throw new LendingNotFoundException("Il prestito non è stato trovato");
+        }
+        Libro libro = prestito.getLibro();
+        if (libro == null) {
+            throw new BookNotFoundException("Il libro non è stato trovato.");
+        }
+
+        if (prestito.isRestituito()) {
+            return;
+        }
+        int copieDisponibili = libro.getnCopieDisponibili();
+        int copieTotali = libro.getnCopieTotali();
+        if (copieDisponibili < copieTotali) {
+            libro.setnCopieDisponibili(copieDisponibili + 1);
+
+            prestito.setDataFine(LocalDate.now());
+            prestito.setRestituito(true);
+            save(prestito);
+        }
+    }
 }
