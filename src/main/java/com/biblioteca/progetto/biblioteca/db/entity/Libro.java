@@ -22,8 +22,8 @@ public class Libro {
     @Column(length = 64)
     private String titolo;
 
+    private int nCopieTotali;
     private int nCopieDisponibili;
-    private boolean restituito;
 
     @OneToMany(mappedBy = "libro")
     private List<Prestito> prestiti;
@@ -68,18 +68,27 @@ public class Libro {
         this.prestiti = prestiti;
     }
 
-    public boolean isRestituito() {
-        return restituito;
+     public int getnCopieTotali() {
+        return nCopieTotali;
     }
 
-    public void setRestituito(boolean restituito) {
-        this.restituito = restituito;
+    public void setnCopieTotali(int nCopieTotali) {
+        this.nCopieTotali = nCopieTotali;
     }
 
     @Override
     public String toString() {
-        return "Libro [id=" + id + ", autore=" + autore + ", titolo=" + titolo + ", nCopieDisponibili="
-                + nCopieDisponibili + ", restituito=" + restituito + "]";
+        return "Libro [id=" + id + ", autore=" + autore + ", titolo=" + titolo + ", nCopieTotali=" + nCopieTotali
+                + ", nCopieDisponibili=" + nCopieDisponibili + "]";
     }
 
-}
+    
+
+
+    
+
+   
+    
+    
+}   
+

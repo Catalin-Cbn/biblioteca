@@ -9,6 +9,7 @@ import com.biblioteca.progetto.biblioteca.db.entity.Libro;
 import com.biblioteca.progetto.biblioteca.db.entity.Prestito;
 import com.biblioteca.progetto.biblioteca.db.repo.LibroRepo;
 import com.biblioteca.progetto.biblioteca.db.repo.PrestitoRepo;
+import com.biblioteca.progetto.biblioteca.web.exception.BookNotDeletableException;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotEditableException;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotFoundException;
 
@@ -51,7 +52,7 @@ public class LibroService {
             throw new BookNotEditableException("Ci sono " + prestiti.size()
                     + "copie in prestito, quindi non puoi aggiornare con " + copie + " copie");
         }
-        libro.setnCopieDisponibili(copie);
+        libro.setnCopieTotali(copie);
         libroRepo.save(libro);
 
     }
@@ -69,7 +70,13 @@ public class LibroService {
         if (libro == null) {
             throw new BookNotFoundException("Il libro con id " + id + " non è presente nel database.");
         }
-        libroRepo.deleteById(id);
+        List<Prestito> prestiti = prestitoRepo.findByLibroAndRestituito(libro, false);
+        if(prestiti == null) {       //se la lista dei prestiti è vuota, possiamo eliminare il libro dal database, altrimenti passiamo l'exception
+            libroRepo.deleteById(id);
+        } else {
+            throw new BookNotDeletableException("Ci sono " + prestiti.size() + " copie del libro in prestito");
+        }
+        
     }
 
     

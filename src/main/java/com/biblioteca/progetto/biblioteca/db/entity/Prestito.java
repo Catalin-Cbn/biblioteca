@@ -18,9 +18,9 @@ public class Prestito {
     private LocalDate dataInizio;
     private LocalDate dataFine;
 
-    private boolean restituito;
+    private boolean restituito = false;
 
-    @ManyToOne()
+    @ManyToOne
     private Libro libro;
 
     @ManyToOne
