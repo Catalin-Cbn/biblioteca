@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.biblioteca.progetto.biblioteca.db.entity.Libro;
 import com.biblioteca.progetto.biblioteca.db.entity.Prestito;
+import com.biblioteca.progetto.biblioteca.db.entity.Utente;
 import com.biblioteca.progetto.biblioteca.db.repo.LibroRepo;
 import com.biblioteca.progetto.biblioteca.db.repo.PrestitoRepo;
+import com.biblioteca.progetto.biblioteca.db.repo.UtenteRepo;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotFoundException;
 import com.biblioteca.progetto.biblioteca.web.exception.BookNotLendableException;
 
@@ -21,6 +23,9 @@ public class PrestitoService {
 
     @Autowired
     LibroRepo libroRepo;
+
+    @Autowired
+    UtenteRepo utenteRepo;
 
     public List<Prestito> findAll() {
         return prestitoRepo.findAll();
@@ -34,9 +39,10 @@ public class PrestitoService {
         prestitoRepo.save(prestito);
     }
 
-    public void creaPrestito(Long libroId) {
+    public void creaPrestito(Long libroId, Long utenteId) {
         Prestito prestito = new Prestito();
         Libro libro = libroRepo.findById(libroId).orElse(null);
+        Utente utente = utenteRepo.findById(utenteId).orElse(null);
         if (libro == null) {
             throw new BookNotFoundException("Il libro con id " + libroId + " non è stato trovato.");
         }
@@ -50,6 +56,7 @@ public class PrestitoService {
 
         prestito.setDataInizio(LocalDate.now());
         prestito.setLibro(libro);
+        prestito.setUtente(utente);
         save(prestito);
     }
 

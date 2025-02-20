@@ -22,7 +22,6 @@ public class Prestito {
 
     private boolean restituito = false;
 
-    @JsonIgnore
     @ManyToOne
     private Libro libro;
 

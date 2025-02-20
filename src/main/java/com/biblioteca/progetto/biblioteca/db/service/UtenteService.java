@@ -23,5 +23,9 @@ public class UtenteService {
         return utenteRepo.findById(id);
     }
 
+    public void save(Utente utente) {
+
+        utenteRepo.save(utente);
+    }
     
 }

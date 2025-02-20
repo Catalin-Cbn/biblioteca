@@ -2,6 +2,8 @@ package com.biblioteca.progetto.biblioteca.db.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,7 @@ public class Utente {
     @Column(length = 64)
     private String telefono;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "utente")
     private List<Prestito> prestiti;
 

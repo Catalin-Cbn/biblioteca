@@ -2,7 +2,7 @@ package com.biblioteca.progetto.biblioteca.db.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +27,7 @@ public class Libro {
     private int nCopieTotali;
     private int nCopieDisponibili;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "libro")
     private List<Prestito> prestiti;
 

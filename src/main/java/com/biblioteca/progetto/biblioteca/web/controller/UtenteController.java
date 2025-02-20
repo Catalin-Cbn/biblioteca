@@ -10,6 +10,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -24,5 +27,13 @@ public class UtenteController {
     public List<Utente> elencoUtenti() {
         return utenteService.findAll() ;
     }
+
+    @PostMapping("aggiungiUtente")
+    public void aggiungiUtente(@RequestBody Utente utente) {
+        
+        utenteService.save(utente);
+        
+    }
+    
     
 }
